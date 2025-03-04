@@ -1,0 +1,17 @@
+package org.example.librarymanagementsystem.controllers;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+
+@Controller
+public class HomeController {
+
+    @GetMapping("/")
+    public String home() {
+        return "home"; // Това зарежда home.html
+    }
+  /*  @GetMapping("/index")
+    public String index() {
+        return "index";  // Този ред означава, че ще се зареди index.html
+    }*/
+
+}
