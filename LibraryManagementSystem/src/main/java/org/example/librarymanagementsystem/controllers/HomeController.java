@@ -9,9 +9,4 @@ public class HomeController {
     public String home() {
         return "home"; // Това зарежда home.html
     }
-  /*  @GetMapping("/index")
-    public String index() {
-        return "index";  // Този ред означава, че ще се зареди index.html
-    }*/
-
 }
