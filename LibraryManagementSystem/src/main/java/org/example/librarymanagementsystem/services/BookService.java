@@ -1,6 +1,7 @@
 package org.example.librarymanagementsystem.services;
 
 import org.example.librarymanagementsystem.models.Book;
+import org.example.librarymanagementsystem.models.Status;
 import org.example.librarymanagementsystem.repositories.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,7 +13,6 @@ public class BookService {
     // Автоматично инжектиране на зависимостта към BookRepository
     @Autowired
     private BookRepository bookRepository;
-// Извиква метод от репозиторието за получаване на всички книги
 
     //read
     public Iterable<Book> getAllBooks() {
@@ -27,21 +27,25 @@ public class BookService {
 
     //update
     @Transactional
-    public void updateBookByTitle(String oldTitle, String title, String author) {
+    public void updateBookByTitle(String oldTitle, String title, String author, String description, Status status) {
         Book book = bookRepository.findByTitle(oldTitle)
                 .orElseThrow(() -> new IllegalArgumentException("Book not found with title: " + oldTitle));
-        book.setTitle(title); // Обнови заглавието
-        book.setAuthor(author); // Обнови автора
+        book.setTitle(title);
+        book.setAuthor(author);
+        book.setDescription(description);
+        book.setStatus(status);
 
         bookRepository.save(book); // Запази промените в базата данни
     }
 
     //add
     @Transactional
-    public void addBook(String titleAdd, String authorAdd) {
+    public void addBook(String titleAdd, String authorAdd, String descriptionAdd, Status statusAdd) {
         Book book=new Book();
         book.setTitle(titleAdd);
         book.setAuthor(authorAdd);
+        book.setDescription(descriptionAdd);
+        book.setStatus(statusAdd);
         bookRepository.save(book);
     }
 

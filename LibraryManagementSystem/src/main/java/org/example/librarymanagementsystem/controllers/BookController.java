@@ -1,5 +1,6 @@
 package org.example.librarymanagementsystem.controllers;
 
+import org.example.librarymanagementsystem.models.Status;
 import org.example.librarymanagementsystem.services.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,6 +13,7 @@ public class BookController {
 //enable automatic dependency injection
     @Autowired
     private BookService bookService;
+
     // Обработва get заявка на "/books"
     @GetMapping("/books")
     public String getAllBooks(Model model) {
@@ -30,15 +32,18 @@ public class BookController {
 
     //update
     @PostMapping("/update")
-    public String updateBookByTitle(@RequestParam String oldTitle, @RequestParam String title,@RequestParam String author) {
-        bookService.updateBookByTitle(oldTitle, title, author);
+    public String updateBookByTitle(@RequestParam String oldTitle,
+                                    @RequestParam String title,@RequestParam String author,
+                                    @RequestParam String description,@RequestParam Status status) {
+        bookService.updateBookByTitle(oldTitle, title, author,description, status);
         return "redirect:/books";
     }
 
     //add
     @PostMapping("/add")
-    public String addBook(@RequestParam String titleAdd, @RequestParam String authorAdd) {
-        bookService.addBook(titleAdd, authorAdd);
+    public String addBook(@RequestParam String titleAdd, @RequestParam String authorAdd,
+                          @RequestParam String descriptionAdd,@RequestParam Status statusAdd) {
+        bookService.addBook(titleAdd, authorAdd, descriptionAdd, statusAdd);
         return "redirect:/books";
     }
 

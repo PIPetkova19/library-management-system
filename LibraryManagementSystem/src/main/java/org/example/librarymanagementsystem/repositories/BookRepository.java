@@ -1,5 +1,6 @@
 package org.example.librarymanagementsystem.repositories;
 
+import org.example.librarymanagementsystem.models.Status;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.example.librarymanagementsystem.models.Book;
 import org.springframework.data.jpa.repository.Modifying;
@@ -14,10 +15,10 @@ public interface BookRepository extends JpaRepository<Book, Long> {
 
     // Търсене на книга по заглавие
     Optional<Book> findByTitle(String title);
-   //update save
+   //update
    @Modifying
-   @Query("UPDATE Book b SET b.title = :title, b.author = :author WHERE b.title = :oldTitle")
-   void updateBookByTitle(@Param("oldTitle") String oldTitle, @Param("title") String title, @Param("author") String author);
+   @Query("UPDATE Book b SET b.title = :title, b.author = :author, b.description=:description, b.status=:status WHERE b.title = :oldTitle")
+   void updateBookByTitle(@Param("oldTitle") String oldTitle, @Param("title") String title, @Param("author") String author,@Param("description") String description, @Param("status") Status status);
 
     //save(T entity) → Запазва (създава или обновява) книга (INSERT/UPDATE)
     //findById(ID id) → Намира книга по ID

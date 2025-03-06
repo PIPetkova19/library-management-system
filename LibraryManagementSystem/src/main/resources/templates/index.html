@@ -4,21 +4,28 @@
     <title>Books</title>
 </head>
 <body>
+<a href="/">Начална страница</a>
+
 <h1>Books</h1><br>
+
 <table>
     <thead>
     <tr><th>READ</th></tr>
     <tr>
-        <th>Id</th>
-        <th>Title</th>
-        <th>Author</th>
+        <th style="padding: 10px;">Id</th>
+        <th style="padding: 10px;">Title</th>
+        <th style="padding: 10px;">Author</th>
+        <th style="padding: 10px;">Description</th>
+        <th style="padding: 10px;">Status</th>
     </tr>
     </thead>
     <tbody>
     <tr th:each="book : ${books}">
-        <td th:text="${book.getId()}"></td>
-        <td th:text="${book.getTitle()}"></td>
-        <td th:text="${book.getAuthor()}"></td>
+        <td th:text="${book.id}"></td>
+        <td th:text="${book.title}"></td>
+        <td th:text="${book.author}"></td>
+        <td th:text="${book.description}"></td>
+        <td th:text="${#strings.replace(#strings.toLowerCase(book.status), '_', ' ')}"></td> <!-- !!!-->
     </tr>
     </tbody>
 </table>
@@ -27,8 +34,8 @@
 <table>
     <tr><th>DELETE</th></tr>
     <tr>
-        <th>Title</th>
-        <th>Actions</th>
+        <th style="padding: 10px;">Title</th>
+        <th style="padding: 10px;">Actions</th>
     </tr>
 
     <tr th:each="book : ${books}">
@@ -42,31 +49,54 @@
     </tr>
 </table><br><br>
 
+<h4>UPDATE</h4>
 <form action="/update" method="post">
     <!-- Скрито поле за старото заглавие -->
-    <label for="oldTitle">Old Title:</label>
-    <input type="number" id="oldTitle" name="oldTitle" placeholder="Enter old book title" required>
-    <br><br>
+    <label for="oldTitle">Old Title:</label><br>
+    <input type="text" id="oldTitle" name="oldTitle" placeholder="Enter old book title" required>
+    <br>
 
     <!-- Въвеждане на новото заглавие -->
-    <label for="title">New Title:</label>
+    <label for="title">New Title:</label><br>
     <input type="text" id="title" name="title" placeholder="Enter new book title" required>
-    <br><br>
+    <br>
 
     <!-- Въвеждане на новия автор -->
-    <label for="author">New Author:</label>
+    <label for="author">New Author:</label><br>
     <input type="text" id="author" name="author" placeholder="Enter new author name" required>
+    <br>
+
+    <label for="author">New Description:</label><br>
+    <input type="text" id="description" name="description" placeholder="Enter new description name" required>
+    <br>
+    <label for="status">Status:</label><br>
+    <select name="status" id="status">
+        <option value="READ">read</option>
+        <option value="TO_READ">to read</option>
+        <option value="READING">reading</option>
+    </select>
     <br><br>
 
     <!-- Бутон за изпращане на формата -->
     <button type="submit">Update Book</button>
-</form>
+</form>    <br><br>
 
+<h4>ADD</h4>
 <form action="/add" method="post">
     <label for="titleAdd">Title:</label><br>
     <input type="text" id="titleAdd" name="titleAdd"><br>
     <label for="authorAdd">Author:</label><br>
-    <input type="text" id="authorAdd" name="authorAdd">
+    <input type="text" id="authorAdd" name="authorAdd"><br>
+    <label for="descriptionAdd">Description:</label><br>
+    <input type="text" id="descriptionAdd" name="descriptionAdd"><br>
+
+    <label for="statusAdd">Status:</label><br>
+    <select name="statusAdd" id="statusAdd">
+        <option value="READ">read</option>
+        <option value="TO_READ">to read</option>
+        <option value="READING">reading</option>
+    </select>
+    <br><br>
     <button type="submit">Add new Book</button>
 </form>
 
