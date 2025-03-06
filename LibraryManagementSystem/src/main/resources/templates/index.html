@@ -4,9 +4,10 @@
     <title>Books</title>
 </head>
 <body>
-<h1>Books</h1>
+<h1>Books</h1><br>
 <table>
     <thead>
+    <tr><th>READ</th></tr>
     <tr>
         <th>Id</th>
         <th>Title</th>
@@ -21,5 +22,47 @@
     </tr>
     </tbody>
 </table>
+<br><br>
+
+<table>
+    <tr><th>DELETE</th></tr>
+    <tr>
+        <th>Title</th>
+        <th>Actions</th>
+    </tr>
+
+    <tr th:each="book : ${books}">
+        <td th:text="${book.title}"></td>
+        <td>
+            <form action="/delete" method="post">
+                <input type="hidden" name="title" th:value="${book.title}">
+                <button type="submit">Delete</button>
+            </form>
+        </td>
+    </tr>
+</table><br><br>
+
+<form action="/update" method="post">
+    <!-- Скрито поле за старото заглавие -->
+    <label for="oldTitle">Old Title:</label>
+    <input type="number" id="oldTitle" name="oldTitle" placeholder="Enter old book title" required>
+    <br><br>
+
+    <!-- Въвеждане на новото заглавие -->
+    <label for="title">New Title:</label>
+    <input type="text" id="title" name="title" placeholder="Enter new book title" required>
+    <br><br>
+
+    <!-- Въвеждане на новия автор -->
+    <label for="author">New Author:</label>
+    <input type="text" id="author" name="author" placeholder="Enter new author name" required>
+    <br><br>
+
+    <!-- Бутон за изпращане на формата -->
+    <button type="submit">Update Book</button>
+</form>
+
+
+
 </body>
 </html>
