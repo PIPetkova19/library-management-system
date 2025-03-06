@@ -16,12 +16,14 @@ public class DataInitializer implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         // Добавяне на книги в базата данни
-        bookRepository.save(new Book("The Catcher in the Rye", "J.D. Salinger"));
-        bookRepository.save(new Book("To Kill a Mockingbird", "Harper Lee"));
-        bookRepository.save(new Book("1986", "George Orwell"));
-        bookRepository.save(new Book("1985", "George Orwell"));
-        bookRepository.save(new Book("1984", "George Orwell"));
+        if (bookRepository.count() == 0) {  // Проверка дали има книги в базата
+            bookRepository.save(new Book("The Catcher in the Rye", "J.D. Salinger"));
+            bookRepository.save(new Book("To Kill a Mockingbird", "Harper Lee"));
+            bookRepository.save(new Book("1986", "George Orwell"));
+            bookRepository.save(new Book("1985", "George Orwell"));
+            bookRepository.save(new Book("1984", "George Orwell"));
 
-        System.out.println("Sample books added to the database.");
+            System.out.println("Sample books added to the database.");
+        }
     }
 }
