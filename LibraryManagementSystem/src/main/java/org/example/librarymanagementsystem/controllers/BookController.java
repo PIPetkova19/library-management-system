@@ -35,5 +35,11 @@ public class BookController {
         return "redirect:/books";
     }
 
+    //add
+    @PostMapping("/add")
+    public String addBook(@RequestParam String titleAdd, @RequestParam String authorAdd) {
+        bookService.addBook(titleAdd, authorAdd);
+        return "redirect:/books";
+    }
 
 }

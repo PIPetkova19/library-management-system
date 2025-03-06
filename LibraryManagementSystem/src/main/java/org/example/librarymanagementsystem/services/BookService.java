@@ -36,4 +36,13 @@ public class BookService {
         bookRepository.save(book); // Запази промените в базата данни
     }
 
+    //add
+    @Transactional
+    public void addBook(String titleAdd, String authorAdd) {
+        Book book=new Book();
+        book.setTitle(titleAdd);
+        book.setAuthor(authorAdd);
+        bookRepository.save(book);
+    }
+
 }
