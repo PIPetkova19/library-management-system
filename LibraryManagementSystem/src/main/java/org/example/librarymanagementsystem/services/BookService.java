@@ -30,11 +30,21 @@ public class BookService {
     public void updateBookByTitle(String oldTitle, String title, String author, String description, Status status) {
         Book book = bookRepository.findByTitle(oldTitle)
                 .orElseThrow(() -> new IllegalArgumentException("Book not found with title: " + oldTitle));
-        book.setTitle(title);
-        book.setAuthor(author);
-        book.setDescription(description);
-        book.setStatus(status);
+        // Ако title НЕ е null и НЕ е празен стринг, тогава го променяме
+        //trim за да може ако по грешка се въведат само интервали да се приеме като празно
+        if (title != null && !title.trim().isEmpty()) {
+            book.setTitle(title);
+        }
+        if (author != null && !author.trim().isEmpty()) {
+            book.setAuthor(author);
+        }
+        if (description != null && !description.trim().isEmpty()) {
+            book.setDescription(description);
+        }
 
+        if (status != null) {//!
+            book.setStatus(status);
+        }
         bookRepository.save(book); // Запази промените в базата данни
     }
 

@@ -34,8 +34,10 @@ public class BookController {
     @PostMapping("/update")
     public String updateBookByTitle(@RequestParam String oldTitle,
                                     @RequestParam String title,@RequestParam String author,
-                                    @RequestParam String description,@RequestParam Status status) {
-        bookService.updateBookByTitle(oldTitle, title, author,description, status);
+                                    @RequestParam String description,@RequestParam String status) {
+        Status finalStatus = (status == null || status.isEmpty()) ? null : Status.valueOf(status.toUpperCase());//!
+
+        bookService.updateBookByTitle(oldTitle, title, author,description, finalStatus);
         return "redirect:/books";
     }
 

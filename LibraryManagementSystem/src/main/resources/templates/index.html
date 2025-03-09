@@ -58,19 +58,19 @@
 
     <!-- Въвеждане на новото заглавие -->
     <label for="title">New Title:</label><br>
-    <input type="text" id="title" name="title" placeholder="Enter new book title" required>
+    <input type="text" id="title" name="title" placeholder="Enter new book title">
     <br>
 
     <!-- Въвеждане на новия автор -->
     <label for="author">New Author:</label><br>
-    <input type="text" id="author" name="author" placeholder="Enter new author name" required>
+    <input type="text" id="author" name="author" placeholder="Enter new author name">
     <br>
 
-    <label for="author">New Description:</label><br>
-    <input type="text" id="description" name="description" placeholder="Enter new description name" required>
-    <br>
+    <label for="description">New Description:</label><br>
+    <textarea id="description" name="description"></textarea><br>
     <label for="status">Status:</label><br>
     <select name="status" id="status">
+        <option value="">Keep current</option>//!
         <option value="READ">read</option>
         <option value="TO_READ">to read</option>
         <option value="READING">reading</option>
@@ -88,7 +88,7 @@
     <label for="authorAdd">Author:</label><br>
     <input type="text" id="authorAdd" name="authorAdd"><br>
     <label for="descriptionAdd">Description:</label><br>
-    <input type="text" id="descriptionAdd" name="descriptionAdd"><br>
+    <textarea id="descriptionAdd" name="descriptionAdd"></textarea><br>
 
     <label for="statusAdd">Status:</label><br>
     <select name="statusAdd" id="statusAdd">
