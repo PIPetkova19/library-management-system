@@ -2,103 +2,147 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Books</title>
+    <style>
+        #hidden-part {
+            display: none; /* По подразбиране съдържанието е скрито */
+        }
+
+        #hidden-part-add {
+            display: none; /* По подразбиране съдържанието е скрито */
+        }
+
+
+    </style>
 </head>
 <body>
 <a href="/">Начална страница</a>
 
-<h1>Books</h1><br>
+<h1>Books</h1>
+
+<!--add-->
+<form  action="/add" method="post">
+    <div id="hidden-part-add">
+        <label for="titleAdd">Title:</label>
+        <input type="text" id="titleAdd" name="titleAdd">
+        <label for="authorAdd">Author:</label>
+        <input type="text" id="authorAdd" name="authorAdd">
+        <label for="descriptionAdd">Description:</label>
+        <textarea id="descriptionAdd" name="descriptionAdd"></textarea>
+
+        <label for="statusAdd">Status:</label>
+        <select name="statusAdd" id="statusAdd">
+            <option value="READ">read</option>
+            <option value="TO_READ">to read</option>
+            <option value="READING">reading</option>
+        </select>
+        <button type="submit">Save Changes</button> <br>
+
+    </div>
+    <button type="button" onclick="hideFuncAdd()">Add new Book</button>
+</form>
+<br><br>
 
 <table>
-    <thead>
-    <tr><th>READ</th></tr>
+    <!--delete and read-->
     <tr>
         <th style="padding: 10px;">Id</th>
         <th style="padding: 10px;">Title</th>
         <th style="padding: 10px;">Author</th>
         <th style="padding: 10px;">Description</th>
         <th style="padding: 10px;">Status</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="book : ${books}">
-        <td th:text="${book.id}"></td>
-        <td th:text="${book.title}"></td>
-        <td th:text="${book.author}"></td>
-        <td th:text="${book.description}"></td>
-        <td th:text="${#strings.replace(#strings.toLowerCase(book.status), '_', ' ')}"></td> <!-- !!!-->
-    </tr>
-    </tbody>
-</table>
-<br><br>
-
-<table>
-    <tr><th>DELETE</th></tr>
-    <tr>
-        <th style="padding: 10px;">Title</th>
-        <th style="padding: 10px;">Actions</th>
+        <th style="padding: 10px;">Action</th>
     </tr>
 
     <tr th:each="book : ${books}">
-        <td th:text="${book.title}"></td>
+        <td class="hidden-part-read" th:text="${book.id}"></td>
+        <td class="hidden-part-read" th:text="${book.title}"></td>
+        <td class="hidden-part-read" th:text="${book.author}"></td>
+        <td class="hidden-part-read" th:text="${book.description}"></td>
+        <td class="hidden-part-read" th:text="${#strings.replace(#strings.toLowerCase(book.status), '_', ' ')}"></td>
+        <td>
+            <form action="/update" method="post">
+                <div id="hidden-part">
+                    <input type="hidden" id="oldTitle" name="oldTitle" required><!--hidden-->
+
+                    <label for="title">New Title:</label>
+                    <input type="text" id="title" name="title">
+
+                    <label for="author">New Author:</label>
+                    <input type="text" id="author" name="author">
+
+                    <label for="description">New Description:</label>
+                    <textarea id="description" name="description"></textarea>
+
+                    <label for="status">Status:</label>
+                    <select name="status" id="status">
+                        <option value="">Keep current</option>
+                        <option value="READ">read</option>
+                        <option value="TO_READ">to read</option>
+                        <option value="READING">reading</option>
+                    </select> <br>
+
+                    <button type="submit">Save Changes</button>
+                </div>
+            </form>
+        </td>
         <td>
             <form action="/delete" method="post">
                 <input type="hidden" name="title" th:value="${book.title}">
                 <button type="submit">Delete</button>
             </form>
         </td>
+        <td>
+            <button type="button" onclick="hideFuncUpdate(this)">Update Book</button>
+        </td>
     </tr>
-</table><br><br>
 
-<h4>UPDATE</h4>
-<form action="/update" method="post">
-    <!-- Скрито поле за старото заглавие -->
-    <label for="oldTitle">Old Title:</label><br>
-    <input type="text" id="oldTitle" name="oldTitle" placeholder="Enter old book title" required>
-    <br>
+</table>
 
-    <!-- Въвеждане на новото заглавие -->
-    <label for="title">New Title:</label><br>
-    <input type="text" id="title" name="title" placeholder="Enter new book title">
-    <br>
 
-    <!-- Въвеждане на новия автор -->
-    <label for="author">New Author:</label><br>
-    <input type="text" id="author" name="author" placeholder="Enter new author name">
-    <br>
 
-    <label for="description">New Description:</label><br>
-    <textarea id="description" name="description"></textarea><br>
-    <label for="status">Status:</label><br>
-    <select name="status" id="status">
-        <option value="">Keep current</option>//!
-        <option value="READ">read</option>
-        <option value="TO_READ">to read</option>
-        <option value="READING">reading</option>
-    </select>
-    <br><br>
+<br>
 
-    <!-- Бутон за изпращане на формата -->
-    <button type="submit">Update Book</button>
-</form>    <br><br>
+<script>
+    function hideFuncUpdate(button) {
+        var row = button.closest("tr");
+        var title = row.querySelector("td:nth-child(2)").innerText;
+        var form = row.querySelector("form[action='/update']");
+        var hiddenPart = form.querySelector("#hidden-part");
 
-<h4>ADD</h4>
-<form action="/add" method="post">
-    <label for="titleAdd">Title:</label><br>
-    <input type="text" id="titleAdd" name="titleAdd"><br>
-    <label for="authorAdd">Author:</label><br>
-    <input type="text" id="authorAdd" name="authorAdd"><br>
-    <label for="descriptionAdd">Description:</label><br>
-    <textarea id="descriptionAdd" name="descriptionAdd"></textarea><br>
+        var titleInput = form.querySelector("#oldTitle");
+        titleInput.value = title; // Задава заглавието в oldTitle
+        //?
 
-    <label for="statusAdd">Status:</label><br>
-    <select name="statusAdd" id="statusAdd">
-        <option value="READ">read</option>
-        <option value="TO_READ">to read</option>
-        <option value="READING">reading</option>
-    </select>
-    <br><br>
-    <button type="submit">Add new Book</button>
-</form>
+
+
+        // Показва / скрива формата
+        if (!hiddenPart.style.display || hiddenPart.style.display === "none") {
+            hiddenPart.style.display = "block";
+        } else {
+            hiddenPart.style.display = "none";
+        }
+
+        var x = document.getElementsByClassName("hidden-part-read");
+        for (var i = 0; i < x.length; i++) {
+            if (x[i].style.visibility  === "hidden") {
+                x[i].style.visibility  = "visible";
+            } else {
+                x[i].style.visibility  = "hidden";
+            }
+        }
+    }
+    function hideFuncAdd() {
+        var x = document.getElementById("hidden-part-add");
+        if (!x.style.display || x.style.display === "none") {
+            x.style.display = "block";
+        } else {
+            x.style.display = "none";
+        }
+    }
+
+</script>
+
+
 
 </body>
 </html>
