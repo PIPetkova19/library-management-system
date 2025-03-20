@@ -5,18 +5,17 @@
     <style>
         #hidden-part {
             display: none; /* По подразбиране съдържанието е скрито */
+            position: absolute;
+            left: 10px;
         }
-
         #hidden-part-add {
             display: none; /* По подразбиране съдържанието е скрито */
         }
-
-
     </style>
 </head>
+
 <body>
 <a href="/">Начална страница</a>
-
 <h1>Books</h1>
 
 <!--add-->
@@ -35,21 +34,22 @@
             <option value="TO_READ">to read</option>
             <option value="READING">reading</option>
         </select>
-        <button type="submit">Save Changes</button> <br>
 
+        <button type="submit">Save Changes</button> <br>
     </div>
-    <button type="button" onclick="hideFuncAdd()">Add new Book</button>
+
+    <button type="button" id="toggleAddButton" onclick="hideFuncAdd()">Add new Book</button>
 </form>
 <br><br>
 
 <table>
     <!--delete and read-->
     <tr>
-        <th style="padding: 10px;">Id</th>
-        <th style="padding: 10px;">Title</th>
-        <th style="padding: 10px;">Author</th>
-        <th style="padding: 10px;">Description</th>
-        <th style="padding: 10px;">Status</th>
+        <th class="hidden-part-read" style="padding: 10px;">Id</th>
+        <th class="hidden-part-read" style="padding: 10px;">Title</th>
+        <th class="hidden-part-read" style="padding: 10px;">Author</th>
+        <th class="hidden-part-read" style="padding: 10px;">Description</th>
+        <th class="hidden-part-read" style="padding: 10px;">Status</th>
         <th style="padding: 10px;">Action</th>
     </tr>
 
@@ -86,20 +86,17 @@
             </form>
         </td>
         <td>
+        <button type="button" id="toggleUpdateButton" onclick="hideFuncUpdate(this)">Update Book</button>
+         </td>
+        <td>
             <form action="/delete" method="post">
                 <input type="hidden" name="title" th:value="${book.title}">
-                <button type="submit">Delete</button>
+                <button id="toggleDeleteButton" type="submit">Delete</button>
             </form>
-        </td>
-        <td>
-            <button type="button" onclick="hideFuncUpdate(this)">Update Book</button>
         </td>
     </tr>
 
 </table>
-
-
-
 <br>
 
 <script>
@@ -107,42 +104,69 @@
         var row = button.closest("tr");
         var title = row.querySelector("td:nth-child(2)").innerText;
         var form = row.querySelector("form[action='/update']");
-        var hiddenPart = form.querySelector("#hidden-part");
+        var hiddenPart = form.querySelector("#hidden-part"); //ъпдейт
 
         var titleInput = form.querySelector("#oldTitle");
+
+        var allButtons = document.querySelectorAll("button"); //Взема всички бутони в страницата
+
+        var buttonUpdate=document.getElementById("toggleUpdateButton");
+        var allDeleteButtons = document.querySelectorAll("button[id='toggleDeleteButton']");
         titleInput.value = title; // Задава заглавието в oldTitle
-        //?
-
-
 
         // Показва / скрива формата
         if (!hiddenPart.style.display || hiddenPart.style.display === "none") {
+
             hiddenPart.style.display = "block";
+            buttonUpdate.textContent="Hide";//сменям текста на бутона
+            buttonUpdate.style.float="right";
+
+            allButtons.forEach(btn => {
+                if (btn !== button && btn.id !== "toggleAddButton" &&
+                    btn.type !== "submit") {
+                    btn.style.display = "none"; // 🔹 Скрива всички бутони, освен "Add new Book" и "Save Changes"
+                }
+            });
+            allDeleteButtons.forEach(btn => btn.style.display = "none");
         } else {
             hiddenPart.style.display = "none";
+            buttonUpdate.textContent="Update Book";//сменям текста на бутона
+            allButtons.forEach(btn => {
+                if (btn.id !== "toggleAddButton" && btn.type !== "submit") {
+                    btn.style.display = "block"; // 🔹 Връща видимостта само на бутоните, които не са "Add new Book" и "Save Changes"
+                }
+            });
+            allDeleteButtons.forEach(btn => btn.style.display = "block"); // Показва обратно "Delete" бутоните
         }
 
+        toggleVisibilityOfReadParts();
+    }
+
+    //скрива заглавията и редовете, които не се ъпдейтват
+    function toggleVisibilityOfReadParts() {
         var x = document.getElementsByClassName("hidden-part-read");
         for (var i = 0; i < x.length; i++) {
-            if (x[i].style.visibility  === "hidden") {
-                x[i].style.visibility  = "visible";
+            if (x[i].style.visibility === "hidden") {
+                x[i].style.visibility = "visible";
             } else {
-                x[i].style.visibility  = "hidden";
+                x[i].style.visibility = "hidden";
             }
         }
     }
+
     function hideFuncAdd() {
         var x = document.getElementById("hidden-part-add");
+        var button = document.getElementById("toggleAddButton");
+
         if (!x.style.display || x.style.display === "none") {
             x.style.display = "block";
+            button.textContent = "Hide"; //променя текста на бутона
         } else {
             x.style.display = "none";
+            button.textContent = "Add new Book";
         }
     }
 
 </script>
-
-
-
 </body>
 </html>
