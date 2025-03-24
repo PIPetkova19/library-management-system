@@ -5,8 +5,10 @@
     <style>
         #hidden-part {
             display: none; /* По подразбиране съдържанието е скрито */
-            position: absolute;
+            position: absolute; /* Позиционира се абсолютно спрямо родителския елемент */
+            top: 200px; /* Разстояние от бутона за обновяване */
             left: 10px;
+            width: 100%; /* Ширината на формата е 100% спрямо родителя */
         }
         #hidden-part-add {
             display: none; /* По подразбиране съдържанието е скрито */
@@ -35,7 +37,7 @@
             <option value="READING">reading</option>
         </select>
 
-        <button type="submit">Save Changes</button> <br>
+        <button type="submit">Save Changes</button>
     </div>
 
     <button type="button" id="toggleAddButton" onclick="hideFuncAdd()">Add new Book</button>
@@ -65,29 +67,28 @@
                     <input type="hidden" id="oldTitle" name="oldTitle" required><!--hidden-->
 
                     <label for="title">New Title:</label>
-                    <input type="text" id="title" name="title">
+                    <input type="text" id="title" name="title" value="" placeholder="Enter new title">
 
                     <label for="author">New Author:</label>
-                    <input type="text" id="author" name="author">
+                    <input type="text" id="author" name="author" value="" placeholder="Enter new author">
 
                     <label for="description">New Description:</label>
                     <textarea id="description" name="description"></textarea>
 
                     <label for="status">Status:</label>
                     <select name="status" id="status">
-                        <option value="">Keep current</option>
                         <option value="READ">read</option>
                         <option value="TO_READ">to read</option>
                         <option value="READING">reading</option>
-                    </select> <br>
+                    </select>
 
                     <button type="submit">Save Changes</button>
                 </div>
             </form>
         </td>
         <td>
-        <button type="button" id="toggleUpdateButton" onclick="hideFuncUpdate(this)">Update Book</button>
-         </td>
+            <button type="button" class="toggleUpdateButton" onclick="hideFuncUpdate(this)">Update Book</button>
+        </td>
         <td>
             <form action="/delete" method="post">
                 <input type="hidden" name="title" th:value="${book.title}">
@@ -103,44 +104,72 @@
     function hideFuncUpdate(button) {
         var row = button.closest("tr");
         var title = row.querySelector("td:nth-child(2)").innerText;
+        var author = row.querySelector("td:nth-child(3)").innerText;
+        var description = row.querySelector("td:nth-child(4)").innerText;
+        var status = row.querySelector("td:nth-child(5)").innerText.trim().toUpperCase(); // Преобразуваме към главни букви и премахваме излишни интервали
         var form = row.querySelector("form[action='/update']");
-        var hiddenPart = form.querySelector("#hidden-part"); //ъпдейт
+        var hiddenPart = form.querySelector("#hidden-part");
 
         var titleInput = form.querySelector("#oldTitle");
+        var titleField = form.querySelector("#title");
+        var authorField = form.querySelector("#author");
+        var descriptionField = form.querySelector("#description");
+        var statusField = form.querySelector("#status");
 
-        var allButtons = document.querySelectorAll("button"); //Взема всички бутони в страницата
+        titleInput.value = title;  // Задава старото заглавие в hidden полето
+        titleField.value = title;  // Задава старото заглавие в полето за новото заглавие
+        authorField.value = author;  // Задава стария автор в полето за нов автор
+        descriptionField.value = description;  // Задава старото описание в полето за ново описание
 
-        var buttonUpdate=document.getElementById("toggleUpdateButton");
-        var allDeleteButtons = document.querySelectorAll("button[id='toggleDeleteButton']");
-        titleInput.value = title; // Задава заглавието в oldTitle
+        // За да запишем стойността на статус в полето за избор
+        if (status === "READ") {
+            statusField.value = "READ";
+        } else if (status === "TO READ" ) {
+            statusField.value = "TO_READ";
+        } else if (status === "READING") {
+            statusField.value = "READING";
+        }
 
         // Показва / скрива формата
         if (!hiddenPart.style.display || hiddenPart.style.display === "none") {
-
             hiddenPart.style.display = "block";
-            buttonUpdate.textContent="Hide";//сменям текста на бутона
-            buttonUpdate.style.float="right";
+            button.style.display = "none"; // Променяме текста на бутона
+            button.style.marginTop = "21px";
 
+            var allButtons = document.querySelectorAll("button"); // Взема всички бутони в страницата
+            var allDeleteButtons = document.querySelectorAll("button[id='toggleDeleteButton']");
+
+            // Скрива всички бутони освен "Add new Book" и "Save Changes"
             allButtons.forEach(btn => {
-                if (btn !== button && btn.id !== "toggleAddButton" &&
-                    btn.type !== "submit") {
-                    btn.style.display = "none"; // 🔹 Скрива всички бутони, освен "Add new Book" и "Save Changes"
+                if (btn !== button && btn.classList.contains("toggleUpdateButton") && btn.type !== "submit") {
+                    btn.style.display = "none";
                 }
             });
-            allDeleteButtons.forEach(btn => btn.style.display = "none");
+
+            allDeleteButtons.forEach(btn => btn.style.display = "none");  // Скрива бутоните за изтриване
         } else {
             hiddenPart.style.display = "none";
-            buttonUpdate.textContent="Update Book";//сменям текста на бутона
+            button.textContent = "Update Book"; // Променяме текста на бутона обратно
+            button.style.marginTop = "0";
+
+           allButtons = document.querySelectorAll("button"); // Взема всички бутони в страницата
+           allDeleteButtons = document.querySelectorAll("button[id='toggleDeleteButton']");
+
+            // Връща видимостта на всички бутони
             allButtons.forEach(btn => {
-                if (btn.id !== "toggleAddButton" && btn.type !== "submit") {
-                    btn.style.display = "block"; // 🔹 Връща видимостта само на бутоните, които не са "Add new Book" и "Save Changes"
+                if (btn.classList.contains("toggleUpdateButton") && btn.type !== "submit") {
+                    btn.style.display = "block";
                 }
             });
-            allDeleteButtons.forEach(btn => btn.style.display = "block"); // Показва обратно "Delete" бутоните
+
+            allDeleteButtons.forEach(btn => btn.style.display = "block"); // Показва бутоните за изтриване обратно
         }
 
         toggleVisibilityOfReadParts();
     }
+
+
+
 
     //скрива заглавията и редовете, които не се ъпдейтват
     function toggleVisibilityOfReadParts() {
