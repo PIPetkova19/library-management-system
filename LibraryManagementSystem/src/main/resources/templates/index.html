@@ -12,6 +12,9 @@
         }
         #hidden-part-add {
             display: none; /* По подразбиране съдържанието е скрито */
+            position: absolute;  /* Добавете относително позициониране */
+            top: 100px;
+            left:10px;
         }
     </style>
 </head>
@@ -190,9 +193,15 @@
         if (!x.style.display || x.style.display === "none") {
             x.style.display = "block";
             button.textContent = "Hide"; //променя текста на бутона
+            button.style.marginLeft="920px";
+            button.style.marginTop="14px";
         } else {
             x.style.display = "none";
             button.textContent = "Add new Book";
+            button.style.marginLeft="0";
+            button.style.marginTop="0";
+
+
         }
     }
 
