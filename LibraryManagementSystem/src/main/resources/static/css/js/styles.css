@@ -6,40 +6,77 @@ body{
     padding: 20px;
     background-color: beige;
 }
+
 a{
     text-decoration: none; /*маха линията отдолу*/
 }
+
 a, button{
     cursor: pointer;
 }
-#add-button{
-    margin-bottom: 20px;
+
+#add-form {/* за да е hide в колона */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 300px;
     margin-top: 20px;
 }
-#add-button, .update-button{
+
+#hidden-part-add {
+    display: none;
+    flex-direction: column;
+    top: 100px;
+    left:10px;
+    align-items: center;
+}
+
+#add-button{
+    margin-bottom: 20px;
+}
+
+#add-button, .update-button, #save-button{
     font-size: 15px;
     padding: 5px;
     border: none;
     background-color: #04AA6D;
     border-radius: 4px;
+    margin-top: 15px;
 }
-#add-button:hover,  .update-button:hover{
+
+#add-button:hover,  .update-button:hover, #save-button:hover{
     background-color: #276a57;
     transition: background-color 0.3s;
 }
 
+#hidden-part-add label {
+    font-size: 14px;
+    margin: 5px;
+    font-weight: bold;
+}
+
+/*update*/
+#hidden-part {
+    display: none;
+    position: absolute; /* Позиционира се абсолютно спрямо родителския елемент */
+    top: 200px;
+    left: 10px;
+    width: 100%;
+}
 #delete-button{
     font-size: 15px;
     padding: 5px;
     border: none;
     background-color: #e32d46;
+    margin-top: 15px;
     border-radius: 4px;
 }
 #delete-button:hover{
     background-color: #923434;
     transition: background-color 0.3s;
 }
-table{
+
+.table-update-delete{
     border-collapse: collapse;
     background-color: #fff;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -47,16 +84,16 @@ table{
     overflow: hidden;
     width: 70%;
 }
-th{
+.table-update-delete th{
     background-color: #4066f8;
     color: white;
 }
-th, td {
+.table-update-delete th, td {
     padding: 20px;
     text-align: center;
     border-bottom: 1px solid #ddd;
 }
-tr:hover{
+.table-update-delete tr:hover{
     background-color: rgba(220, 212, 212, 0.81);
     transition: background-color 0.3s;
 }

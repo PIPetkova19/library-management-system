@@ -1,3 +1,16 @@
+function hideFuncAdd() {
+    var x = document.getElementById("hidden-part-add");
+    var button = document.getElementById("add-button");
+
+    if (x.style.display === "none" || x.style.display === "") {  // Проверка дали е скрит
+        x.style.display = "flex";
+        button.textContent = "Hide"; // Променя текста на бутона
+    } else {
+        x.style.display = "none";
+        button.textContent = "Add new Book";
+    }
+}
+
 function hideFuncUpdate(button) {
     var row = button.closest("tr");
     var title = row.querySelector("td:nth-child(2)").innerText;
@@ -6,6 +19,7 @@ function hideFuncUpdate(button) {
     var status = row.querySelector("td:nth-child(5)").innerText.trim().toUpperCase(); // Преобразуваме към главни букви и премахваме излишни интервали
     var form = row.querySelector("form[action='/update']");
     var hiddenPart = form.querySelector("#hidden-part");
+  var table = document.querySelector(".table-update-delete");
 
     var titleInput = form.querySelector("#oldTitle");
     var titleField = form.querySelector("#title");
@@ -30,7 +44,9 @@ function hideFuncUpdate(button) {
     // Показва / скрива формата
     if (!hiddenPart.style.display || hiddenPart.style.display === "none") {
         hiddenPart.style.display = "block";
-        button.style.display = "none"; // Променяме текста на бутона
+        table.style.display="block";
+
+        button.style.display = "none";
         button.style.marginTop = "21px";
 
         var allButtons = document.querySelectorAll("button"); // Взема всички бутони в страницата
@@ -46,6 +62,7 @@ function hideFuncUpdate(button) {
         allDeleteButtons.forEach(btn => btn.style.display = "none");  // Скрива бутоните за изтриване
     } else {
         hiddenPart.style.display = "none";
+      table.style.display="none";
         button.textContent = "Update Book"; // Променяме текста на бутона обратно
         button.style.marginTop = "0";
 
@@ -61,40 +78,22 @@ function hideFuncUpdate(button) {
 
         allDeleteButtons.forEach(btn => btn.style.display = "block"); // Показва бутоните за изтриване обратно
     }
-
-    toggleVisibilityOfReadParts();
+    toggleVisibilityOfReadParts()
 }
-
-
 
 
 //скрива заглавията и редовете, които не се ъпдейтват
 function toggleVisibilityOfReadParts() {
     var x = document.getElementsByClassName("hidden-part-read");
+    var table = document.getElementById("table-update-delete");
     for (var i = 0; i < x.length; i++) {
         if (x[i].style.visibility === "hidden") {
             x[i].style.visibility = "visible";
+            table.style.display="block";
         } else {
             x[i].style.visibility = "hidden";
+            table.style.display="none";
+
         }
-    }
-}
-
-function hideFuncAdd() {
-    var x = document.getElementById("hidden-part-add");
-    var button = document.getElementById("add-button");
-
-    if (!x.style.display || x.style.display === "none") {
-        x.style.display = "block";
-        button.textContent = "Hide"; //променя текста на бутона
-        button.style.marginLeft="920px";
-        button.style.marginTop="14px";
-    } else {
-        x.style.display = "none";
-        button.textContent = "Add new Book";
-        button.style.marginLeft="0";
-        button.style.marginTop="0";
-
-
     }
 }

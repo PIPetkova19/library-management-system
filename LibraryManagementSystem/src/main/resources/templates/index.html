@@ -3,30 +3,16 @@
 <head>
     <title>Books</title>
     <link rel="stylesheet" href="/css/js/styles.css">
-    <style>
-        #hidden-part {
-            display: none; /* По подразбиране съдържанието е скрито */
-            position: absolute; /* Позиционира се абсолютно спрямо родителския елемент */
-            top: 200px; /* Разстояние от бутона за обновяване */
-            left: 10px;
-            width: 100%; /* Ширината на формата е 100% спрямо родителя */
-        }
-        #hidden-part-add {
-            display: none; /* По подразбиране съдържанието е скрито */
-            position: absolute;  /* Добавете относително позициониране */
-            top: 100px;
-            left:10px;
-        }
-    </style>
+
 </head>
 
 <body>
 <a href="/">Начална страница</a>
 <h1>Books</h1>
-<br>
+
 <!--add-->
-<form  action="/add" method="post">
-    <div id="hidden-part-add">
+<form  id="add-form" action="/add" method="post">
+    <div id="hidden-part-add" >
         <label for="titleAdd">Title:</label>
         <input type="text" id="titleAdd" name="titleAdd">
         <label for="authorAdd">Author:</label>
@@ -41,31 +27,32 @@
             <option value="READING">reading</option>
         </select>
 
-        <button type="submit">Save Changes</button>
+        <button type="submit" id="save-button">Save Changes</button>
     </div>
 
     <button type="button" id="add-button" onclick="hideFuncAdd()">Add new Book</button>
 </form>
-<br>
 
-<table>
-    <!--delete and read-->
+<!--delete and read-->
+<table >
     <tr>
-        <th class="hidden-part-read" style="padding: 10px;">Id</th>
-        <th class="hidden-part-read" style="padding: 10px;">Title</th>
-        <th class="hidden-part-read" style="padding: 10px;">Author</th>
-        <th class="hidden-part-read" style="padding: 10px;">Description</th>
-        <th class="hidden-part-read" style="padding: 10px;">Status</th>
+        <th style="padding: 10px;">Id</th>
+        <th style="padding: 10px;">Title</th>
+        <th style="padding: 10px;">Author</th>
+        <th style="padding: 10px;">Description</th>
+        <th style="padding: 10px;">Status</th>
     </tr>
 
     <tr th:each="book : ${books}">
-        <td class="hidden-part-read" th:text="${book.id}"></td>
-        <td class="hidden-part-read" th:text="${book.title}"></td>
-        <td class="hidden-part-read" th:text="${book.author}"></td>
-        <td class="hidden-part-read" th:text="${book.description}"></td>
-        <td class="hidden-part-read" th:text="${#strings.replace(#strings.toLowerCase(book.status), '_', ' ')}"></td>
+        <td th:text="${book.id}"></td>
+        <td th:text="${book.title}"></td>
+        <td th:text="${book.author}"></td>
+        <td th:text="${book.description}"></td>
+        <td th:text="${#strings.replace(#strings.toLowerCase(book.status), '_', ' ')}"></td>
+
+        <!-- Формата за Update, без класа table-update-delete -->
         <td>
-            <form action="/update" method="post">
+            <form class="table-update-delete" action="/update" method="post">
                 <div id="hidden-part">
                     <input type="hidden" id="oldTitle" name="oldTitle" required><!--hidden-->
 
@@ -89,19 +76,24 @@
                 </div>
             </form>
         </td>
+
+        <!-- Бутон за Update без класа table-update-delete -->
         <td>
-            <button type="button" class="update-button" onclick="hideFuncUpdate(this)">Update Book</button>
+            <button type="button" onclick="hideFuncUpdate(this)">Update Book</button>
         </td>
+
+        <!-- Формата за Delete, без класа table-update-delete -->
         <td>
             <form action="/delete" method="post">
                 <input type="hidden" name="title" th:value="${book.title}">
-                <button id="delete-button" type="submit">Delete</button>
+                <button type="submit">Delete</button>
             </form>
         </td>
     </tr>
-
 </table>
-<br>
+
+
+
 <script src="/css/js/script.js"></script>
 </body>
 </html>
