@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Books</title>
+    <style>
+        #hidden-part {
+            display: none; /* По подразбиране съдържанието е скрито */
+            position: absolute;
+            left: 10px;
+        }
+        #hidden-part-add {
+            display: none; /* По подразбиране съдържанието е скрито */
+        }
+    </style>
+</head>
+
+<body>
+<a href="/">Начална страница</a>
+<h1>Books</h1>
+
+<!--add-->
+<form  action="/add" method="post">
+    <div id="hidden-part-add">
+        <label for="titleAdd">Title:</label>
+        <input type="text" id="titleAdd" name="titleAdd">
+        <label for="authorAdd">Author:</label>
+        <input type="text" id="authorAdd" name="authorAdd">
+        <label for="descriptionAdd">Description:</label>
+        <textarea id="descriptionAdd" name="descriptionAdd"></textarea>
+
+        <label for="statusAdd">Status:</label>
+        <select name="statusAdd" id="statusAdd">
+            <option value="READ">read</option>
+            <option value="TO_READ">to read</option>
+            <option value="READING">reading</option>
+        </select>
+
+        <button type="submit">Save Changes</button> <br>
+    </div>
+
+    <button type="button" id="toggleAddButton" onclick="hideFuncAdd()">Add new Book</button>
+</form>
+<br><br>
+
+<table>
+    <!--delete and read-->
+    <tr>
+        <th class="hidden-part-read" style="padding: 10px;">Id</th>
+        <th class="hidden-part-read" style="padding: 10px;">Title</th>
+        <th class="hidden-part-read" style="padding: 10px;">Author</th>
+        <th class="hidden-part-read" style="padding: 10px;">Description</th>
+        <th class="hidden-part-read" style="padding: 10px;">Status</th>
+        <th style="padding: 10px;">Action</th>
+    </tr>
+
+    <tr th:each="book : ${books}">
+        <td class="hidden-part-read" th:text="${book.id}"></td>
+        <td class="hidden-part-read" th:text="${book.title}"></td>
+        <td class="hidden-part-read" th:text="${book.author}"></td>
+        <td class="hidden-part-read" th:text="${book.description}"></td>
+        <td class="hidden-part-read" th:text="${#strings.replace(#strings.toLowerCase(book.status), '_', ' ')}"></td>
+        <td>
+            <form action="/update" method="post">
+                <div id="hidden-part">
+                    <input type="hidden" id="oldTitle" name="oldTitle" required><!--hidden-->
+
+                    <label for="title">New Title:</label>
+                    <input type="text" id="title" name="title">
+
+                    <label for="author">New Author:</label>
+                    <input type="text" id="author" name="author">
+
+                    <label for="description">New Description:</label>
+                    <textarea id="description" name="description"></textarea>
+
+                    <label for="status">Status:</label>
+                    <select name="status" id="status">
+                        <option value="">Keep current</option>
+                        <option value="READ">read</option>
+                        <option value="TO_READ">to read</option>
+                        <option value="READING">reading</option>
+                    </select> <br>
+
+                    <button type="submit">Save Changes</button>
+                </div>
+            </form>
+        </td>
+        <td>
+        <button type="button" id="toggleUpdateButton" onclick="hideFuncUpdate(this)">Update Book</button>
+         </td>
+        <td>
+            <form action="/delete" method="post">
+                <input type="hidden" name="title" th:value="${book.title}">
+                <button id="toggleDeleteButton" type="submit">Delete</button>
+            </form>
+        </td>
+    </tr>
+
+</table>
+<br>
+
+<script>
+    function hideFuncUpdate(button) {
+        var row = button.closest("tr");
+        var title = row.querySelector("td:nth-child(2)").innerText;
+        var form = row.querySelector("form[action='/update']");
+        var hiddenPart = form.querySelector("#hidden-part"); //ъпдейт
+
+        var titleInput = form.querySelector("#oldTitle");
+
+        var allButtons = document.querySelectorAll("button"); //Взема всички бутони в страницата
+
+        var buttonUpdate=document.getElementById("toggleUpdateButton");
+        var allDeleteButtons = document.querySelectorAll("button[id='toggleDeleteButton']");
+        titleInput.value = title; // Задава заглавието в oldTitle
+
+        // Показва / скрива формата
+        if (!hiddenPart.style.display || hiddenPart.style.display === "none") {
+
+            hiddenPart.style.display = "block";
+            buttonUpdate.textContent="Hide";//сменям текста на бутона
+            buttonUpdate.style.float="right";
+
+            allButtons.forEach(btn => {
+                if (btn !== button && btn.id !== "toggleAddButton" &&
+                    btn.type !== "submit") {
+                    btn.style.display = "none"; // 🔹 Скрива всички бутони, освен "Add new Book" и "Save Changes"
+                }
+            });
+            allDeleteButtons.forEach(btn => btn.style.display = "none");
+        } else {
+            hiddenPart.style.display = "none";
+            buttonUpdate.textContent="Update Book";//сменям текста на бутона
+            allButtons.forEach(btn => {
+                if (btn.id !== "toggleAddButton" && btn.type !== "submit") {
+                    btn.style.display = "block"; // 🔹 Връща видимостта само на бутоните, които не са "Add new Book" и "Save Changes"
+                }
+            });
+            allDeleteButtons.forEach(btn => btn.style.display = "block"); // Показва обратно "Delete" бутоните
+        }
+
+        toggleVisibilityOfReadParts();
+    }
+
+    //скрива заглавията и редовете, които не се ъпдейтват
+    function toggleVisibilityOfReadParts() {
+        var x = document.getElementsByClassName("hidden-part-read");
+        for (var i = 0; i < x.length; i++) {
+            if (x[i].style.visibility === "hidden") {
+                x[i].style.visibility = "visible";
+            } else {
+                x[i].style.visibility = "hidden";
+            }
+        }
+    }
+
+    function hideFuncAdd() {
+        var x = document.getElementById("hidden-part-add");
+        var button = document.getElementById("toggleAddButton");
+
+        if (!x.style.display || x.style.display === "none") {
+            x.style.display = "block";
+            button.textContent = "Hide"; //променя текста на бутона
+        } else {
+            x.style.display = "none";
+            button.textContent = "Add new Book";
+        }
+    }
+
+</script>
+</body>
+</html>
